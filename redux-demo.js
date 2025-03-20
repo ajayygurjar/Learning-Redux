@@ -1,14 +1,20 @@
-const redux = require('redux');
+const redux = require("redux");
 
 const counterReducer = (state = { counter: 0 }, action) => {
-  return {
-    counter: state.counter + 1
-  };
+  const { counter } = state;
+
+  if (action.type === "increment") {
+    return { counter: counter + 1 };
+  }
+
+  if (action.type === "decrement") {
+    return { counter: counter - 1 };
+  }
+
+  return state;
 };
 
 const store = redux.createStore(counterReducer);
-console.log(store.getState());
-
 
 const counterSubscriber = () => {
   const latestState = store.getState();
@@ -16,3 +22,11 @@ const counterSubscriber = () => {
 };
 
 store.subscribe(counterSubscriber);
+
+for (let i = 0; i < 5; i++) {
+  store.dispatch({ type: "increment" });
+}
+
+store.dispatch({ type: "decrement" });
+
+console.log("Final state:", store.getState());
